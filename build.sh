@@ -9,11 +9,15 @@ ccache -M 50G
 export ARCH=arm64
 export KBUILD_BUILD_HOST=WSLUbuntu
 export KBUILD_BUILD_USER="Maddox"
+workspace=$(pwd)
+othersource=$(dirname "$workspace")
+cd "$othersource" || exit
  if ! [ -d "clang" ]; then
-git clone --depth=1  https://gitlab.com/LeCmnGend/proton-clang.git -b clang-13  clang
+git clone --depth=1  https://gitlab.com/LeCmnGend/proton-clang.git -b clang-13 clang
  fi
+ cd "$workspace" || exit
 echo "try setup kernelSU"
- if ! [ -d "kernelSU" ]; then
+ if ! [ -d "KernelSU" ]; then
 curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
  fi
 
@@ -26,13 +30,13 @@ make O=out ARCH=arm64 ares_user_defconfig
 
  fi
 
-PATH="${PWD}/clang/bin:${PATH}:${PWD}/clang/bin:${PATH}:${PWD}/clang/bin:${PATH}" \
+PATH=${othersource}/clang/bin:${PATH}" \
 make -j$(nproc --all) O=out \
                       ARCH=arm64 \
                       CC="clang" \
                       CLANG_TRIPLE=aarch64-linux-gnu- \
-                      CROSS_COMPILE="${PWD}/clang/bin/aarch64-linux-gnu-" \
-                      CROSS_COMPILE_ARM32="${PWD}/clang/bin/arm-linux-gnueabi-" \
+                      CROSS_COMPILE="${othersource}/clang/bin/aarch64-linux-gnu-" \
+                      CROSS_COMPILE_ARM32="${othersource}/clang/bin/arm-linux-gnueabi-" \
 		      LD=ld.lld \
                       STRIP=llvm-strip \
                       AS=llvm-as \
