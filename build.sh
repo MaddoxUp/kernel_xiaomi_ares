@@ -59,7 +59,7 @@ sed -i 's!BLOCK=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot;!BLOCK=auto;!
 sed -i 's/IS_SLOT_DEVICE=0;/is_slot_device=auto;/g'  $othersource/Anykernel3/anykernel.sh
 cp $workspace/out/arch/arm64/boot/Image.gz-dtb $othersource/Anykernel3
 cd $othersource/Anykernel3
-zip -r9 Test-OSS-KERNEL-ARES-S.zip
+zip -r9 Test-OSS-KERNEL-ARES-S.zip .
 }
 
 compile
