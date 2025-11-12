@@ -4,7 +4,7 @@ othersource=$(dirname "$workspace")
 function compile() 
 {
 
-source ~/.bashrc && source ~/.profile
+
 export LC_ALL=C && export USE_CCACHE=1
 ccache -M 50G
 export ARCH=arm64
