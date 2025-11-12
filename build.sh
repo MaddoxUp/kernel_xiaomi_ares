@@ -30,7 +30,7 @@ make O=out ARCH=arm64 ares_user_defconfig
 
  fi
 
-PATH=${othersource}/clang/bin:${PATH}" \
+PATH="${othersource}/clang/bin:${PATH}" \
 make -j$(nproc --all) O=out \
                       ARCH=arm64 \
                       CC="clang" \
