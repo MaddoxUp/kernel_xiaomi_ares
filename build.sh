@@ -1,5 +1,6 @@
 #!/bin/bash
-
+workspace=$(pwd)
+othersource=$(dirname "$workspace")
 function compile() 
 {
 
@@ -9,8 +10,6 @@ ccache -M 50G
 export ARCH=arm64
 export KBUILD_BUILD_HOST=WSLUbuntu
 export KBUILD_BUILD_USER="Maddox"
-workspace=$(pwd)
-othersource=$(dirname "$workspace")
 cd "$othersource" || exit
  if ! [ -d "clang" ]; then
 git clone --depth=1  https://gitlab.com/LeCmnGend/proton-clang.git -b clang-13 clang
@@ -46,6 +45,23 @@ make -j$(nproc --all) O=out \
    		      OBJDUMP=llvm-objdump \
                       CONFIG_NO_ERROR_ON_MISMATCH=y 2>&1 | tee error.log 
 }
+function ak3()
+{
+	 cd "$othersource" || exit
+	 rm -rf Anykernel3
+ 	 echo "===== 克隆 AnyKernel3 ====="
+
+git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git Anykernel3
+cd "$workspace/"
+
+sed -i 's/do.devicecheck=1/do.devicecheck=0/g' $othersource/Anykernel3/anykernel.sh
+sed -i 's!BLOCK=/dev/block/platform/omap/omap_hsmmc.0/by-name/boot;!BLOCK=auto;!g' $othersource/Anykernel3/anykernel.sh
+sed -i 's/IS_SLOT_DEVICE=0;/is_slot_device=auto;/g'  $othersource/Anykernel3/anykernel.sh
+cp $workspace/out/arch/arm64/boot/Image.gz-dtb $othersource/Anykernel3
+cd $othersource/Anykernel3
+zip -r9 Test-OSS-KERNEL-ARES-S.zip
+}
 
 compile
+ak3
 
